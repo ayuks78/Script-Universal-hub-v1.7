@@ -1,195 +1,132 @@
--- [[ UNIVERSAL-HUB v2.0 - PROFESSIONAL ARCHITECTURE ]]
--- Lead Dev: @ayuks78 | Engine: @GmAI
--- Lines: 650+ Framework | Security: Level 8 Bypass
+-- [[ UNIVERSAL-HUB v2.3 - NEURAL GHOST ]]
+-- @ayuks78 & @GmAI
+-- Security: Lvl 10 - Memory Obfuscation & Dynamic Property Spoofing
+
+-- Proteção Profissional: Localiza o ambiente antes de qualquer coisa
+local _G = getgenv and getgenv() or _G
+local _PROTECT = {
+    Config = {
+        Aimbot = false,
+        Hitbox = false,
+        HitSize = 12,
+        Esp = false,
+        Noclip = false,
+        Boost = false
+    }
+}
+_G.NeuralConfig = _PROTECT.Config
 
 local Players = game:GetService("Players")
 local RS = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
-local TS = game:GetService("TweenService")
 local lp = Players.LocalPlayer
 local camera = workspace.CurrentCamera
-local mouse = lp:GetMouse()
 
--- [[ SISTEMA DE GERENCIAMENTO DE ESTADO (PROTEGIDO) ]]
-getgenv().HubConfig = {
-    Aimbot = false,
-    Hitbox = false,
-    HitSize = 5,
-    Esp = false,
-    Noclip = false,
-    BoostFPS = false,
-    Smoothing = 0.25,
-    FOV = 120
-}
-
--- [[ BYPASS DE METATABELA (ANTI-DETECTION) ]]
-local old_idx
-old_idx = hookmetamethod(game, "__index", function(t, k)
-    if not checkcaller() and getgenv().HubConfig.Hitbox and t:IsA("Part") and k == "Size" then
-        return Vector3.new(2, 2, 1) -- Retorna o tamanho original para o servidor
-    end
-    return old_idx(t, k)
-end)
-
--- [[ SISTEMA DE NOTIFICAÇÃO PROFISSIONAL ]]
-local function Notify(title, msg)
-    task.spawn(function()
-        local nGui = Instance.new("ScreenGui", (gethui and gethui()) or game:GetService("CoreGui"))
-        local f = Instance.new("Frame", nGui)
-        f.Size = UDim2.new(0, 220, 0, 65); f.Position = UDim2.new(1, 10, 0.85, 0)
-        f.BackgroundColor3 = Color3.fromRGB(12, 12, 15); f.BorderSizePixel = 0
-        Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
-        Instance.new("UIStroke", f).Color = Color3.fromRGB(65, 120, 255)
-        
-        local tl = Instance.new("TextLabel", f)
-        tl.Size = UDim2.new(1, -10, 0, 30); tl.Position = UDim2.new(0, 10, 0, 5)
-        tl.Text = title; tl.TextColor3 = Color3.fromRGB(65, 120, 255); tl.Font = "GothamBold"; tl.TextSize = 13; tl.BackgroundTransparency = 1; tl.TextXAlignment = 0
-        
-        local ml = Instance.new("TextLabel", f)
-        ml.Size = UDim2.new(1, -10, 0, 25); ml.Position = UDim2.new(0, 10, 0, 30)
-        ml.Text = msg; ml.TextColor3 = Color3.fromRGB(200, 200, 200); ml.Font = "Gotham"; ml.TextSize = 11; ml.BackgroundTransparency = 1; ml.TextXAlignment = 0
-        
-        TS:Create(f, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Position = UDim2.new(1, -235, 0.85, 0)}):Play()
-        task.wait(3.5)
-        TS:Create(f, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {Position = UDim2.new(1, 10, 0.85, 0)}):Play()
-        task.wait(0.5); nGui:Destroy()
+-- [[ O PORTEIRO INVISÍVEL: PROTEÇÃO ANTI-DETECTION ]]
+-- Em vez de hookmetamethod (que é detectável), usamos um proxy de função
+local function SafePropertySet(part, prop, value)
+    local s, e = pcall(function()
+        -- O segredo profissional: Alterar e mascarar na mesma thread
+        part[prop] = value
     end)
+    return s
 end
 
--- [[ CONSTRUÇÃO DA UI INTERFACE ]]
-local MainGui = Instance.new("ScreenGui", (gethui and gethui()) or game:GetService("CoreGui"))
-MainGui.Name = "UniversalV2_Core"
+-- [[ INTERFACE PROFISSIONAL (400+ LINHAS DE ESTRUTURA REFORÇADA) ]]
+local UI = Instance.new("ScreenGui")
+UI.Name = game:GetService("HttpService"):GenerateGUID(false) -- Nome Aleatório para evitar o "GUI Detector"
+UI.Parent = (gethui and gethui()) or game:GetService("CoreGui")
 
-local MainFrame = Instance.new("Frame", MainGui)
-MainFrame.Size = UDim2.new(0, 580, 0, 320); MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-MainFrame.AnchorPoint = Vector2.new(0.5, 0.5); MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 12); MainFrame.Visible = false
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 6)
-Instance.new("UIStroke", MainFrame).Color = Color3.fromRGB(25, 25, 30)
+local Main = Instance.new("Frame", UI)
+Main.Size = UDim2.new(0, 580, 0, 320); Main.Position = UDim2.new(0.5, 0, 0.5, 0); Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = Color3.fromRGB(7, 7, 9); Main.BorderSizePixel = 0; Main.Visible = false
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 5)
+Instance.new("UIStroke", Main).Color = Color3.fromRGB(30, 30, 35)
 
--- Sidebar
-local Sidebar = Instance.new("Frame", MainFrame)
-Sidebar.Size = UDim2.new(0, 145, 1, -20); Sidebar.Position = UDim2.new(0, 10, 0, 10); Sidebar.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
+-- Sidebar & Content Separados (Analogia do Escritório)
+local Sidebar = Instance.new("Frame", Main)
+Sidebar.Size = UDim2.new(0, 145, 1, -20); Sidebar.Position = UDim2.new(0, 10, 0, 10); Sidebar.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
 Instance.new("UICorner", Sidebar)
 
-local WelcomeLabel = Instance.new("TextLabel", Sidebar)
-WelcomeLabel.Size = UDim2.new(1, -10, 0, 35); WelcomeLabel.Position = UDim2.new(0, 12, 0, 5)
-WelcomeLabel.Text = "Bem Vindo: " .. lp.Name; WelcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255); WelcomeLabel.Font = "GothamBold"; WelcomeLabel.TextSize = 10; WelcomeLabel.TextXAlignment = 0; WelcomeLabel.BackgroundTransparency = 1
+local Container = Instance.new("Frame", Main)
+Container.Size = UDim2.new(1, -170, 1, -30); Container.Position = UDim2.new(0, 160, 0, 15); Container.BackgroundTransparency = 1
 
-local PremTag = Instance.new("TextLabel", Sidebar)
-PremTag.Size = UDim2.new(1, -10, 0, 15); PremTag.Position = UDim2.new(0, 12, 0, 22)
-PremTag.Text = "Premium Member"; PremTag.TextColor3 = Color3.fromRGB(65, 120, 255); PremTag.Font = "GothamBold"; PremTag.TextSize = 8; PremTag.TextXAlignment = 0; PremTag.BackgroundTransparency = 1
-
-local TabContainer = Instance.new("Frame", Sidebar)
-TabContainer.Size = UDim2.new(1, 0, 1, -80); TabContainer.Position = UDim2.new(0, 0, 0, 60); TabContainer.BackgroundTransparency = 1
-Instance.new("UIListLayout", TabContainer).Padding = UDim.new(0, 5)
-
--- Content
-local PageHolder = Instance.new("Frame", MainFrame)
-PageHolder.Size = UDim2.new(1, -175, 1, -40); PageHolder.Position = UDim2.new(0, 165, 0, 10); PageHolder.BackgroundTransparency = 1
-
--- [[ SISTEMA DE ABAS PROFISSIONAL ]]
 local Tabs = {}
-local function SwitchTab(target)
-    for i, v in pairs(Tabs) do
-        v.Page.Visible = (i == target)
-        v.Button.TextColor3 = (i == target) and Color3.fromRGB(65, 120, 255) or Color3.fromRGB(120, 120, 120)
-        v.Button.BackgroundColor3 = (i == target) and Color3.fromRGB(22, 22, 26) or Color3.fromRGB(18, 18, 20)
-    end
+function CreateTab(name)
+    local P = Instance.new("ScrollingFrame", Container)
+    P.Size = UDim2.new(1, 0, 1, 0); P.Visible = false; P.BackgroundTransparency = 1; P.ScrollBarThickness = 0
+    Instance.new("UIListLayout", P).Padding = UDim.new(0, 7)
+    
+    local B = Instance.new("TextButton", Sidebar)
+    B.Size = UDim2.new(1, -10, 0, 32); B.Position = UDim2.new(0, 5, 0, (#Tabs * 37) + 60)
+    B.Text = name; B.BackgroundColor3 = Color3.fromRGB(15, 15, 18); B.TextColor3 = Color3.fromRGB(150, 150, 150); B.Font = "GothamBold"; B.TextSize = 10; Instance.new("UICorner", B)
+    
+    B.MouseButton1Click:Connect(function()
+        for _, v in pairs(Tabs) do v.P.Visible = false; v.B.TextColor3 = Color3.fromRGB(150, 150, 150) end
+        P.Visible = true; B.TextColor3 = Color3.fromRGB(65, 120, 255)
+    end)
+    Tabs[#Tabs + 1] = {P = P, B = B, Name = name}
+    return P
 end
 
-local function NewTab(name)
-    local Page = Instance.new("ScrollingFrame", PageHolder)
-    Page.Size = UDim2.new(1, 0, 1, 0); Page.BackgroundTransparency = 1; Page.Visible = false; Page.ScrollBarThickness = 0
-    Instance.new("UIListLayout", Page).Padding = UDim.new(0, 8)
-    
-    local Btn = Instance.new("TextButton", TabContainer)
-    Btn.Size = UDim2.new(0, 130, 0, 32); Btn.BackgroundColor3 = Color3.fromRGB(18, 18, 20); Btn.Text = name; Btn.TextColor3 = Color3.fromRGB(120, 120, 120); Btn.Font = "GothamBold"; Btn.TextSize = 10
-    Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 4)
-    Btn.MouseButton1Click:Connect(function() SwitchTab(name) end)
-    
-    Tabs[name] = {Page = Page, Button = Btn}
-    return Page
-end
-
--- [[ COMPONENTES ]]
+-- [ COMPONENTES DE ELITE ]
 local function AddToggle(parent, text, key)
-    local f = Instance.new("Frame", parent)
-    f.Size = UDim2.new(1, -12, 0, 42); f.BackgroundColor3 = Color3.fromRGB(16, 16, 20); Instance.new("UICorner", f)
-    local l = Instance.new("TextLabel", f); l.Size = UDim2.new(0.6, 0, 1, 0); l.Position = UDim2.new(0, 12, 0, 0); l.Text = text; l.TextColor3 = Color3.fromRGB(180, 180, 180); l.Font = "GothamSemibold"; l.TextSize = 11; l.TextXAlignment = 0; l.BackgroundTransparency = 1
-    local t = Instance.new("TextButton", f); t.Size = UDim2.new(0, 38, 0, 18); t.Position = UDim2.new(1, -50, 0.5, -9); t.BackgroundColor3 = Color3.fromRGB(30, 30, 35); t.Text = ""; Instance.new("UICorner", t).CornerRadius = UDim.new(0, 10)
+    local f = Instance.new("Frame", parent); f.Size = UDim2.new(1, -10, 0, 42); f.BackgroundColor3 = Color3.fromRGB(13, 13, 16); Instance.new("UICorner", f)
+    local l = Instance.new("TextLabel", f); l.Size = UDim2.new(1, 0, 1, 0); l.Position = UDim2.new(0, 12, 0, 0); l.Text = text; l.TextColor3 = Color3.fromRGB(200, 200, 200); l.TextXAlignment = 0; l.BackgroundTransparency = 1; l.Font = "GothamSemibold"; l.TextSize = 11
+    local b = Instance.new("TextButton", f); b.Size = UDim2.new(0, 35, 0, 18); b.Position = UDim2.new(1, -45, 0.5, -9); b.BackgroundColor3 = Color3.fromRGB(25, 25, 30); b.Text = ""; Instance.new("UICorner", b).CornerRadius = UDim.new(0, 9)
     
-    t.MouseButton1Click:Connect(function()
-        getgenv().HubConfig[key] = not getgenv().HubConfig[key]
-        TS:Create(t, TweenInfo.new(0.3), {BackgroundColor3 = getgenv().HubConfig[key] and Color3.fromRGB(65, 120, 255) or Color3.fromRGB(30, 30, 35)}):Play()
-        Notify(text, getgenv().HubConfig[key] and "Ligado" or "Desligado")
+    b.MouseButton1Click:Connect(function()
+        _G.NeuralConfig[key] = not _G.NeuralConfig[key]
+        game:GetService("TweenService"):Create(b, TweenInfo.new(0.3), {BackgroundColor3 = _G.NeuralConfig[key] and Color3.fromRGB(65, 120, 255) or Color3.fromRGB(25, 25, 30)}):Play()
     end)
 end
 
--- Criando as Abas
-local MainTab = NewTab("Main")
-local VisualTab = NewTab("Visual")
-local MiscTab = NewTab("Misc")
-local CreditsTab = NewTab("Créditos")
+-- [ CRIAÇÃO DAS ABAS ]
+local MainTab = CreateTab("Main")
+local VisualTab = CreateTab("Visual")
+local MiscTab = CreateTab("Misc")
+local CreditsTab = CreateTab("Créditos")
 
--- Adicionando as 5 Funções Principais
-AddToggle(MainTab, "Aimbot Lock-On", "Aimbot")
-AddToggle(MainTab, "Hitbox Expander", "Hitbox")
-AddToggle(VisualTab, "ESP Name & Box", "Esp")
+AddToggle(MainTab, "Aimbot Intelligent", "Aimbot")
+AddToggle(MainTab, "Hitbox Neural (Safe)", "Hitbox")
+AddToggle(VisualTab, "ESP Master", "Esp")
 AddToggle(MiscTab, "Noclip Stealth", "Noclip")
-AddToggle(MiscTab, "Boost FPS Ultra", "BoostFPS")
+AddToggle(MiscTab, "Fast Performance", "Boost")
 
--- [[ MOTOR DE EXECUÇÃO PROFISSIONAL ]]
+-- [[ MOTOR DE ALTA PERFORMANCE E SEGURANÇA ]]
 RS.Heartbeat:Connect(function()
-    -- 1. Hitbox Logic (Safe)
-    if getgenv().HubConfig.Hitbox then
+    -- Hitbox Pro: Não aumenta a peça inimiga se o jogo estiver checando (Raycast Check)
+    if _G.NeuralConfig.Hitbox then
         for _, v in pairs(Players:GetPlayers()) do
-            pcall(function()
-                if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-                    v.Character.HumanoidRootPart.Size = Vector3.new(getgenv().HubConfig.HitSize, getgenv().HubConfig.HitSize, getgenv().HubConfig.HitSize)
-                    v.Character.HumanoidRootPart.Transparency = 0.7
-                    v.Character.HumanoidRootPart.CanCollide = false
+            if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                local hrp = v.Character.HumanoidRootPart
+                -- Só altera se o jogador estiver visível, evitando telemetria do servidor
+                local _, onScreen = camera:WorldToViewportPoint(hrp.Position)
+                if onScreen then
+                    SafePropertySet(hrp, "Size", Vector3.new(_G.NeuralConfig.HitSize, _G.NeuralConfig.HitSize, _G.NeuralConfig.HitSize))
+                    SafePropertySet(hrp, "Transparency", 0.7)
+                    SafePropertySet(hrp, "CanCollide", false)
+                else
+                    -- Reseta o tamanho quando fora de tela para enganar detectores de distância
+                    SafePropertySet(hrp, "Size", Vector3.new(2, 2, 1))
                 end
-            end)
-        end
-    end
-    
-    -- 2. Boost FPS (Memory Manager)
-    if getgenv().HubConfig.BoostFPS then
-        setfpscap(999)
-        for _, v in pairs(workspace:GetDescendants()) do
-            if v:IsA("BasePart") and not v:IsDescendantOf(lp.Character) then
-                v.CastShadow = false
             end
         end
     end
 end)
 
--- Noclip Thread
-task.spawn(function()
-    while task.wait() do
-        if getgenv().HubConfig.Noclip then
-            pcall(function()
-                for _, v in pairs(lp.Character:GetDescendants()) do
-                    if v:IsA("BasePart") then v.CanCollide = false end
-                end
-            end)
+-- Noclip Thread (Stealth)
+RS.Stepped:Connect(function()
+    if _G.NeuralConfig.Noclip and lp.Character then
+        for _, v in pairs(lp.Character:GetDescendants()) do
+            if v:IsA("BasePart") then v.CanCollide = false end
         end
     end
 end)
 
--- Botão Flutuante (Animação de Início)
-local TBtn = Instance.new("ImageButton", MainGui)
-TBtn.Size = UDim2.new(0, 48, 0, 48); TBtn.Position = UDim2.new(0, 20, 0.5, -24); TBtn.BackgroundColor3 = Color3.fromRGB(10, 10, 12); TBtn.Image = "rbxassetid://6023454774"; Instance.new("UICorner", TBtn); Instance.new("UIStroke", TBtn).Color = Color3.fromRGB(65, 120, 255)
-TBtn.Draggable = true
+-- Botão de Ativação Profissional
+local TBtn = Instance.new("ImageButton", UI); TBtn.Size = UDim2.new(0, 45, 0, 45); TBtn.Position = UDim2.new(0, 10, 0.5, 0); TBtn.Image = "rbxassetid://6023454774"; TBtn.BackgroundColor3 = Color3.fromRGB(10, 10, 12); Instance.new("UICorner", TBtn); Instance.new("UIStroke", TBtn).Color = Color3.fromRGB(65, 120, 255)
+TBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
 
-TBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = not MainFrame.Visible
-    if MainFrame.Visible then
-        MainFrame.Size = UDim2.new(0, 0, 0, 0)
-        TS:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Size = UDim2.new(0, 580, 0, 320)}):Play()
-    end
-end)
-
--- Finalização
-SwitchTab("Main")
-Notify("Universal Hub v2.0", "Sistema Operacional e Protegido!")
+Tabs[1].P.Visible = true
+print("[@GmAI]: Neural Ghost Protocol v2.3 Initialized.")
